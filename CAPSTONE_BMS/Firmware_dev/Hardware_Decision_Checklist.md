@@ -22,7 +22,7 @@ These choices define your entire system's voltage, current, topology, and cost. 
   - [ ] Molicel P42A 21700 (4.2Ah, 30A cont, 20mΩ)
   - [ ] Samsung INR18650-30Q (3Ah, 15A cont, 20mΩ)
   - [ ] Sony VTC6 18650 (3Ah, 15A cont, 18mΩ)
-- [ ] **LOCKED DECISION:** Cell model = _______________
+- [ ] **LOCKED DECISION:** Cell model = Samsung INR18650 - 30Q
 
 ### Sensing Architecture
 - [ ] Decide between two approaches:
@@ -37,7 +37,7 @@ These choices define your entire system's voltage, current, topology, and cost. 
     - More complex PCB, more wiring, more potential for noise/errors
     - No built-in protections — all in firmware
     - Better learning experience
-- [ ] **LOCKED DECISION:** Sensing approach = _______________
+- [ ] **LOCKED DECISION:** Sensing approach = Discrete sensing 
 
 ### MCU Selection
 - [ ] Decide primary MCU:
@@ -55,7 +55,7 @@ These choices define your entire system's voltage, current, topology, and cost. 
     - STM32 handles real-time switching and sensing
     - ESP32 handles telemetry/display via WiFi
     - More complex but best of both
-- [ ] **LOCKED DECISION:** MCU = _______________
+- [ ] **LOCKED DECISION:** MCU = STM32F446RE
 
 ---
 
@@ -82,6 +82,17 @@ These depend on your cell's voltage and current ratings decided above.
 - [ ] Calculate total MOSFETs needed: 6 cells × 3 switches = 18 MOSFETs
 - [ ] Order MOSFETs (buy 25+ for spares)
 
+Precharge Circuit (Priority 1 — Switching section):
+
+1× precharge MOSFET (small signal, doesn't carry full load — logic-level N-channel)
+1× precharge resistor (10Ω, 1W or 2W rated — handles 0.12A briefly)
+This sits between the two strings, used before every parallel reconnection
+
+Bulk Capacitor (Priority 1 — Switching section):
+
+1× electrolytic capacitor (4700µF, 25V rated minimum) on the output bus
+Holds bus voltage during 1–2ms string switchover in alternation mode
+
 ### Gate Drivers (Skip if using logic-level MOSFETs driven directly from MCU)
 - [ ] Select gate driver IC:
   - [ ] IR2104 (half-bridge, drives 2 MOSFETs each) — need 9 chips
@@ -93,8 +104,8 @@ These depend on your cell's voltage and current ratings decided above.
 - [ ] Order gate driver ICs (buy extras)
 
 ### GPIO / Pin Planning
-- [ ] Map out how 18 MOSFET gates connect to MCU pins
-- [ ] If MCU doesn't have 18 free GPIOs:
+- [ ] Map out how MOSFET gates connect to MCU pins
+- [ ] If MCU doesn't have free GPIOs:
   - [ ] Plan shift register approach (74HC595 for expanding outputs)
   - [ ] Or use I2C GPIO expander (MCP23017 — 16 extra pins per chip)
 - [ ] **LOCKED DECISION:** GPIO expansion method = _______________
@@ -153,6 +164,12 @@ These depend on your cell's voltage and current ratings decided above.
 - [ ] Precharge resistor circuit (optional but recommended)
   - [ ] Limits inrush current when connecting load
   - [ ] Bypassed by main MOSFET after precharge period
+
+Kill Switch / E-Stop (Priority 3 — Safety):
+
+Physical toggle switch or XT60 loop key on main pack output
+Already mentioned but worth promoting — essential for testing phase
+
 
 ---
 
