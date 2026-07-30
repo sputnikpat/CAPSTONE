@@ -64,25 +64,20 @@ These choices define your entire system's voltage, current, topology, and cost. 
 These depend on your cell's voltage and current ratings decided above.
 
 ### MOSFET Selection
-- [ ] Determine max current per MOSFET (= cell max discharge current)
-- [ ] Determine max voltage per MOSFET (= max cell voltage × number of series cells in worst case)
-- [ ] Select N-channel MOSFETs with:
-  - [ ] VDS rating > 2× your max expected voltage (safety margin)
-  - [ ] ID rating > 2× your max expected current (safety margin)
-  - [ ] RDS(on) as low as possible (target < 5mΩ)
-  - [ ] Logic-level gate threshold if driving directly from 3.3V MCU (Vgs(th) < 2.5V)
-  - [ ] Available in through-hole (TO-220) for easier soldering OR SMD (D2PAK) for compact PCB
-- [ ] **Candidate MOSFETs to evaluate:**
-  - [ ] IRLB8721 (30V, 62A, 8.7mΩ, logic-level — easy to drive)
-  - [ ] IRFS7440 (40V, 120A, 2.5mΩ — needs gate driver)
-  - [ ] IRLZ44N (55V, 47A, 22mΩ, logic-level — cheap and available)
-  - [ ] AOD4184 (40V, 50A, 4.5mΩ, logic-level)
-- [ ] Decide: logic-level MOSFETs (no gate driver needed) vs standard MOSFETs (gate driver required)
-- [ ] **LOCKED DECISION:** MOSFET model = _______________
-- [ ] Calculate total MOSFETs needed: 6 cells × 3 switches = 18 MOSFETs
-- [ ] Order MOSFETs (buy 25+ for spares)
+### High-Side Switching
+- [ ] MOSFET: IRF4905 (P-channel, 55V, 74A, 20mΩ, TO-220)
+- [ ] Quantity: 3 (String A switch + String B switch + precharge path)
+- [ ] Level shifter per MOSFET: 2N2222 NPN + 1kΩ base resistor + 10kΩ pull-up
+- [ ] No gate driver IC needed
+- [ ] **LOCKED DECISION:** IRF4905 + NPN level shifter
 
-Precharge Circuit (Priority 1 — Switching section):
+### Rover Platform
+- [ ] 4WD chassis with DC gear motors (not brushless, not thrusters)
+- [ ] Motor driver: BTS7960 (handles up to 43A, overkill but robust)
+- [ ] Expected current: 3-5A cruise, 8-10A peak
+- [ ] RC transmitter + receiver for remote control
+
+###Precharge Circuit (Priority 1 — Switching section):
 
 1× precharge MOSFET (small signal, doesn't carry full load — logic-level N-channel)
 1× precharge resistor (10Ω, 1W or 2W rated — handles 0.12A briefly)
@@ -94,21 +89,35 @@ Bulk Capacitor (Priority 1 — Switching section):
 Holds bus voltage during 1–2ms string switchover in alternation mode
 
 ### Gate Drivers (Skip if using logic-level MOSFETs driven directly from MCU)
-- [ ] Select gate driver IC:
-  - [ ] IR2104 (half-bridge, drives 2 MOSFETs each) — need 9 chips
-  - [ ] IR2110 (high and low side driver)
-  - [ ] UCC27211 (high-speed half-bridge)
-  - [ ] MCP1407 (single-channel, non-inverting)
-- [ ] Calculate bootstrap capacitor and resistor values
-- [ ] **LOCKED DECISION:** Gate driver = _______________
-- [ ] Order gate driver ICs (buy extras)
+### High-Side Switching Circuit
+- [ ] Select P-channel MOSFET:
+  - [ ] IRF4905 (55V, 74A, 20mΩ — common, cheap, TO-220)
+  - [ ] IRF9540N (100V, 23A, 117mΩ — higher voltage rating but higher resistance)
+  - [ ] AO4407A (30V, 12A, 28mΩ — SMD, compact)
+- [ ] Verify Vgs threshold is achievable (gate pulled to 0V, source at 11.1V = 11.1V Vgs)
+- [ ] Verify RDS(on) at your expected current (calculate I²R loss)
+- [ ] **LOCKED DECISION:** P-MOSFET model = _______________
+- [ ] Quantity needed: 1 per string + 1 for precharge path = 3 minimum
 
-### GPIO / Pin Planning
-- [ ] Map out how MOSFET gates connect to MCU pins
-- [ ] If MCU doesn't have free GPIOs:
-  - [ ] Plan shift register approach (74HC595 for expanding outputs)
-  - [ ] Or use I2C GPIO expander (MCP23017 — 16 extra pins per chip)
-- [ ] **LOCKED DECISION:** GPIO expansion method = _______________
+### Level Shifting Components (per P-MOSFET)
+- [ ] NPN transistor: 2N2222 or BC547 (any small signal NPN works)
+- [ ] Base resistor: 1kΩ (limits MCU current to ~3mA)
+- [ ] Gate pull-up resistor: 10kΩ (pulls gate to battery voltage when off)
+- [ ] Quantity: 3 sets (one per P-MOSFET)
+- [ ] Total cost per switch: ~₹33
+
+### GPIO Planning
+- [ ] Total GPIOs needed:
+  - [ ] 2-3 for string switching P-MOSFETs
+  - [ ] 1 for precharge P-MOSFET
+  - [ ] 2 for I2C (SDA + SCL for INA226s)
+  - [ ] 6 for ADC (per-cell voltage dividers)
+  - [ ] 6 for ADC (NTC thermistors) — can share with voltage using analog mux
+  - [ ] 1-2 for UART/CAN
+  - [ ] Total: ~18-20 pins
+- [ ] STM32F446 has 50+ GPIOs — no expansion needed
+- [ ] ESP32 has 30+ GPIOs — no expansion needed
+- [ ] **LOCKED DECISION:** No GPIO expansion required
 
 ---
 
@@ -165,7 +174,7 @@ Holds bus voltage during 1–2ms string switchover in alternation mode
   - [ ] Limits inrush current when connecting load
   - [ ] Bypassed by main MOSFET after precharge period
 
-Kill Switch / E-Stop (Priority 3 — Safety):
+###Kill Switch / E-Stop (Priority 3 — Safety):
 
 Physical toggle switch or XT60 loop key on main pack output
 Already mentioned but worth promoting — essential for testing phase
