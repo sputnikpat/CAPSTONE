@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<item key="replaceBarOpen" value="false"/>
+	<list key="searchhistory">
+		<item value="void EXTI15_10_IRQHandler(void)"/>
+		<item value="volatile uint8_t screen = 0;"/>
+		<item value="volatile"/>
+	</list>
+</section>

@@ -1,0 +1,805 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+#define OLED_ADDRESS 0x3C
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
+UART_HandleTypeDef huart2;
+
+/* USER CODE BEGIN PV */
+uint8_t OLED_Buffer[1024];
+uint8_t current_screen = 0;
+volatile uint8_t button_pressed = 0;
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_USART2_UART_Init(void);
+static void MX_I2C1_Init(void);
+/* USER CODE BEGIN PFP */
+
+void OLED_WriteCommand(uint8_t command);
+void OLED_WriteData(uint8_t data);
+void OLED_Init(void);
+void OLED_Fill(uint8_t pattern);
+
+void OLED_Clear(void);
+void OLED_Update(void);
+void OLED_DrawPixel(uint8_t x, uint8_t y, uint8_t color);
+void OLED_DrawChar(uint8_t x, uint8_t y, char c);
+void OLED_DrawString(uint8_t x, uint8_t y, const char *str);
+
+//AUV Dashboard
+void OLED_BootScreen(void);
+void OLED_Dashboard(void);
+void OLED_DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+void OLED_DrawBattery(uint8_t x, uint8_t y, uint8_t percent);
+void OLED_StatusScreen(void);
+void OLED_NavigationScreen(void);
+void OLED_SonarScreen(void);
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_USART2_UART_Init();
+  MX_I2C1_Init();
+  /* USER CODE BEGIN 2 */
+
+  OLED_Init();
+
+  HAL_Delay(500);
+
+  OLED_BootScreen();
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+
+      OLED_Dashboard();
+
+      HAL_Delay(1000);
+
+  /* USER CODE END 3 */
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 16;
+  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLR = 2;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+
+  /* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LD2_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+
+  /* USER CODE END MX_GPIO_Init_2 */
+}
+
+/* USER CODE BEGIN 4 */
+
+const uint8_t Font5x7[][5] =
+{
+    // SPACE
+    {0x00, 0x00, 0x00, 0x00, 0x00},
+
+    // A-Z
+    {0x7E, 0x11, 0x11, 0x11, 0x7E}, // A
+    {0x7F, 0x49, 0x49, 0x49, 0x36}, // B
+    {0x3E, 0x41, 0x41, 0x41, 0x22}, // C
+    {0x7F, 0x41, 0x41, 0x22, 0x1C}, // D
+    {0x7F, 0x49, 0x49, 0x49, 0x41}, // E
+    {0x7F, 0x09, 0x09, 0x09, 0x01}, // F
+    {0x3E, 0x41, 0x49, 0x49, 0x7A}, // G
+    {0x7F, 0x08, 0x08, 0x08, 0x7F}, // H
+    {0x00, 0x41, 0x7F, 0x41, 0x00}, // I
+    {0x20, 0x40, 0x41, 0x3F, 0x01}, // J
+    {0x7F, 0x08, 0x14, 0x22, 0x41}, // K
+    {0x7F, 0x40, 0x40, 0x40, 0x40}, // L
+    {0x7F, 0x02, 0x0C, 0x02, 0x7F}, // M
+    {0x7F, 0x04, 0x08, 0x10, 0x7F}, // N
+    {0x3E, 0x41, 0x41, 0x41, 0x3E}, // O
+    {0x7F, 0x09, 0x09, 0x09, 0x06}, // P
+    {0x3E, 0x41, 0x51, 0x21, 0x5E}, // Q
+    {0x7F, 0x09, 0x19, 0x29, 0x46}, // R
+    {0x46, 0x49, 0x49, 0x49, 0x31}, // S
+    {0x01, 0x01, 0x7F, 0x01, 0x01}, // T
+    {0x3F, 0x40, 0x40, 0x40, 0x3F}, // U
+    {0x1F, 0x20, 0x40, 0x20, 0x1F}, // V
+    {0x3F, 0x40, 0x38, 0x40, 0x3F}, // W
+    {0x63, 0x14, 0x08, 0x14, 0x63}, // X
+    {0x07, 0x08, 0x70, 0x08, 0x07}, // Y
+    {0x61, 0x51, 0x49, 0x45, 0x43}, // Z
+
+    // 0-9
+    {0x3E, 0x51, 0x49, 0x45, 0x3E}, // 0
+    {0x00, 0x42, 0x7F, 0x40, 0x00}, // 1
+    {0x42, 0x61, 0x51, 0x49, 0x46}, // 2
+    {0x21, 0x41, 0x45, 0x4B, 0x31}, // 3
+    {0x18, 0x14, 0x12, 0x7F, 0x10}, // 4
+    {0x27, 0x45, 0x45, 0x45, 0x39}, // 5
+    {0x3C, 0x4A, 0x49, 0x49, 0x30}, // 6
+    {0x01, 0x71, 0x09, 0x05, 0x03}, // 7
+    {0x36, 0x49, 0x49, 0x49, 0x36}, // 8
+    {0x06, 0x49, 0x49, 0x29, 0x1E}, // 9
+
+    // Symbols
+    {0x00, 0x60, 0x60, 0x00, 0x00}, // .
+    {0x00, 0x36, 0x36, 0x00, 0x00}, // :
+    {0x62, 0x64, 0x08, 0x13, 0x23}, // %
+    {0x08, 0x08, 0x08, 0x08, 0x08}  // -
+};
+
+void OLED_DrawChar(uint8_t x, uint8_t y, char c)
+{
+    uint8_t index;
+
+    if (c == ' ')
+    {
+        index = 0;
+    }
+    else if (c >= 'A' && c <= 'Z')
+    {
+        index = 1 + (c - 'A');
+    }
+    else if (c >= '0' && c <= '9')
+    {
+        index = 27 + (c - '0');
+    }
+    else if (c == '.')
+    {
+        index = 37;
+    }
+    else if (c == ':')
+    {
+        index = 38;
+    }
+    else if (c == '%')
+    {
+        index = 39;
+    }
+    else if (c == '-')
+    {
+        index = 40;
+    }
+    else
+    {
+        return;
+    }
+
+    for (uint8_t column = 0; column < 5; column++)
+    {
+        uint8_t column_data = Font5x7[index][column];
+
+        for (uint8_t row = 0; row < 7; row++)
+        {
+            if (column_data & (1 << row))
+            {
+                OLED_DrawPixel(x + column, y + row, 1);
+            }
+        }
+    }
+}
+
+void OLED_WriteCommand(uint8_t command)
+{
+    uint8_t data[2];
+
+    data[0] = 0x00;
+    data[1] = command;
+
+    HAL_I2C_Master_Transmit(&hi2c1,
+                            OLED_ADDRESS << 1,
+                            data,
+                            2,
+                            HAL_MAX_DELAY);
+}
+
+
+void OLED_WriteData(uint8_t data)
+{
+    uint8_t buffer[2];
+
+    buffer[0] = 0x40;
+    buffer[1] = data;
+
+    HAL_I2C_Master_Transmit(&hi2c1,
+                            OLED_ADDRESS << 1,
+                            buffer,
+                            2,
+                            HAL_MAX_DELAY);
+}
+
+void OLED_Init(void)
+{
+    HAL_Delay(100);
+
+    OLED_WriteCommand(0xAE);  // Display OFF
+
+    OLED_WriteCommand(0xD5);  // Display clock divide ratio
+    OLED_WriteCommand(0x80);
+
+    OLED_WriteCommand(0xA8);  // Multiplex ratio
+    OLED_WriteCommand(0x3F);
+
+    OLED_WriteCommand(0xD3);  // Display offset
+    OLED_WriteCommand(0x00);
+
+    OLED_WriteCommand(0x40);  // Start line
+
+    OLED_WriteCommand(0x8D);  // Charge pump
+    OLED_WriteCommand(0x14);
+
+    OLED_WriteCommand(0x20);  // Memory addressing mode
+    OLED_WriteCommand(0x00);
+
+    OLED_WriteCommand(0xA1);  // Segment remap
+    OLED_WriteCommand(0xC8);  // COM output scan direction
+
+    OLED_WriteCommand(0xDA);  // COM pins hardware configuration
+    OLED_WriteCommand(0x12);
+
+    OLED_WriteCommand(0x81);  // Contrast
+    OLED_WriteCommand(0x7F);
+
+    OLED_WriteCommand(0xD9);  // Pre-charge period
+    OLED_WriteCommand(0xF1);
+
+    OLED_WriteCommand(0xDB);  // VCOMH deselect level
+    OLED_WriteCommand(0x40);
+
+    OLED_WriteCommand(0xA4);  // Display follows RAM
+
+    OLED_WriteCommand(0xA6);  // Normal display
+
+    OLED_WriteCommand(0xAF);  // Display ON
+
+    HAL_Delay(100);
+}
+
+void OLED_Fill(uint8_t pattern)
+{
+    for (uint8_t page = 0; page < 8; page++)
+    {
+        OLED_WriteCommand(0xB0 + page);
+
+        OLED_WriteCommand(0x02);  // Column low nibble
+        OLED_WriteCommand(0x10);  // Column high nibble
+
+        for (uint8_t column = 0; column < 128; column++)
+        {
+            OLED_WriteData(pattern);
+        }
+    }
+}
+
+void OLED_Clear(void)
+{
+    for (uint16_t i = 0; i < 1024; i++)
+    {
+        OLED_Buffer[i] = 0x00;
+    }
+}
+
+void OLED_DrawPixel(uint8_t x, uint8_t y, uint8_t color)
+{
+    if (x >= 128 || y >= 64)
+        return;
+
+    uint16_t index = x + (y / 8) * 128;
+    uint8_t bit = y % 8;
+
+    if (color)
+    {
+        OLED_Buffer[index] |= (1 << bit);
+    }
+    else
+    {
+        OLED_Buffer[index] &= ~(1 << bit);
+    }
+}
+
+void OLED_Update(void)
+{
+    for (uint8_t page = 0; page < 8; page++)
+    {
+        OLED_WriteCommand(0xB0 + page);
+        OLED_WriteCommand(0x02);
+        OLED_WriteCommand(0x10);
+
+        for (uint8_t column = 0; column < 128; column++)
+        {
+            OLED_WriteData(OLED_Buffer[page * 128 + column]);
+        }
+    }
+}
+
+void OLED_DrawString(uint8_t x, uint8_t y, const char *str)
+{
+    while (*str)
+    {
+        OLED_DrawChar(x, y, *str);
+
+        x += 6;  // 5 pixels character + 1 pixel spacing
+
+        str++;
+
+        if (x >= 123)
+        {
+            break;
+        }
+    }
+}
+
+void OLED_BootScreen(void)
+{
+    /* Screen 1 */
+
+    OLED_Clear();
+
+    OLED_DrawString(46, 8, "AUV-01");
+    OLED_DrawString(34, 25, "SYSTEM");
+    OLED_DrawString(43, 35, "START");
+
+    OLED_Update();
+
+    HAL_Delay(700);
+
+
+    /* Screen 2 */
+
+    OLED_Clear();
+
+    OLED_DrawString(46, 8, "AUV-01");
+    OLED_DrawString(28, 25, "INITIALIZING");
+
+    OLED_Update();
+
+    HAL_Delay(500);
+
+
+    /* Loading animation */
+
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        OLED_Clear();
+
+        OLED_DrawString(46, 8, "AUV-01");
+        OLED_DrawString(28, 25, "INITIALIZING");
+
+        /* Draw loading bar */
+
+        for (uint8_t x = 0; x < (i + 1) * 10; x++)
+        {
+            for (uint8_t y = 45; y < 50; y++)
+            {
+                OLED_DrawPixel(14 + x, y, 1);
+            }
+        }
+
+        OLED_Update();
+
+        HAL_Delay(150);
+    }
+
+
+    /* System OK */
+
+    OLED_Clear();
+
+    OLED_DrawString(46, 8, "AUV-01");
+    OLED_DrawString(40, 25, "SYSTEM");
+    OLED_DrawString(43, 35, "OK");
+
+    OLED_Update();
+
+    HAL_Delay(1000);
+}
+
+void OLED_Dashboard(void)
+{
+    char depth_text[32];
+    char temp_text[32];
+
+    static int depth = 124;
+    static int temperature = 246;
+    static int battery = 87;
+
+    /* Convert values */
+
+    snprintf(depth_text, sizeof(depth_text),
+             "DEPTH: %d.%dM",
+             depth / 10,
+             depth % 10);
+
+    snprintf(temp_text, sizeof(temp_text),
+             "TEMP: %d.%dC",
+             temperature / 10,
+             temperature % 10);
+
+
+    /* Clear screen */
+
+    OLED_Clear();
+
+
+    /* Header */
+
+    OLED_DrawString(4, 2, "AUV-01");
+    OLED_DrawString(82, 2, "ONLINE");
+
+
+    /* Header separator */
+
+    for (uint8_t x = 0; x < 128; x++)
+    {
+        OLED_DrawPixel(x, 11, 1);
+    }
+
+
+    /* Depth */
+
+    OLED_DrawString(5, 17, depth_text);
+
+
+    /* Temperature */
+
+    OLED_DrawString(5, 30, temp_text);
+
+
+    /* Battery label */
+
+    OLED_DrawString(5, 43, "BAT:");
+
+    /* Battery graphic */
+
+    OLED_DrawBattery(35, 41, battery);
+
+
+    /* Battery percentage */
+
+    char bat_text[10];
+
+    snprintf(bat_text, sizeof(bat_text),
+             "%d%%", battery);
+
+    OLED_DrawString(72, 43, bat_text);
+
+
+    /* Update */
+
+    OLED_Update();
+
+
+    /* Simulated sensor changes */
+
+    depth++;
+
+    if (depth > 150)
+    {
+        depth = 124;
+    }
+
+
+    temperature++;
+
+    if (temperature > 300)
+    {
+        temperature = 246;
+    }
+
+
+    battery--;
+
+    if (battery < 80)
+    {
+        battery = 87;
+    }
+}
+
+void OLED_DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+{
+    for (uint8_t i = x; i < x + width; i++)
+    {
+        OLED_DrawPixel(i, y, 1);
+        OLED_DrawPixel(i, y + height - 1, 1);
+    }
+
+    for (uint8_t i = y; i < y + height; i++)
+    {
+        OLED_DrawPixel(x, i, 1);
+        OLED_DrawPixel(x + width - 1, i, 1);
+    }
+}
+
+void OLED_DrawBattery(uint8_t x, uint8_t y, uint8_t percent)
+{
+    /* Battery outline */
+
+    OLED_DrawRect(x, y, 30, 12);
+
+    /* Battery terminal */
+
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        OLED_DrawPixel(x + 30, y + 4 + i, 1);
+    }
+
+    /* Limit percentage */
+
+    if (percent > 100)
+    {
+        percent = 100;
+    }
+
+    /* Calculate fill width */
+
+    uint8_t fill = (percent * 26) / 100;
+
+    /* Fill battery */
+
+    for (uint8_t px = 0; px < fill; px++)
+    {
+        for (uint8_t py = 0; py < 8; py++)
+        {
+            OLED_DrawPixel(x + 2 + px, y + 2 + py, 1);
+        }
+    }
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == GPIO_PIN_13)
+    {
+        button_pressed = 1;
+    }
+}
+
+/* USER CODE END 4 */
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
+#ifdef USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* USER CODE END 6 */
+}
+#endif /* USE_FULL_ASSERT */

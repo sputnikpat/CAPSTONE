@@ -1,0 +1,48 @@
+/*
+ * ina260.c
+ *
+ *  Created on: Aug 23, 2026
+ *      Author: harsh
+ */
+
+
+#include "ina260.h"
+extern I2C_HandleTypeDef hi2c1;
+
+#define INA260_MAX_RETRIES 2
+
+static uint8_t INA260_ReadReg(uint8_t reg, uint8_t *data)
+{
+    for (uint8_t attempt = 0; attempt < INA260_MAX_RETRIES; attempt++)
+    {
+        if (HAL_I2C_Master_Transmit(&hi2c1, INA260_ADDR, &reg, 1, 20) == HAL_OK &&
+            HAL_I2C_Master_Receive(&hi2c1, INA260_ADDR, data, 2, 20) == HAL_OK)
+        {
+            return 1;   // success
+        }
+
+        OLED_I2C_Recover();   // bus stuck / NACK -> bit-bang SCL free, reinit I2C1
+        HAL_Delay(2);
+    }
+    return 0;   // failed after retries
+}
+
+uint8_t INA260_Init(void)
+{
+    uint8_t data[2] = {0};
+    if (!INA260_ReadReg(INA260_REG_MFR_ID, data))
+        return 0;
+
+    uint16_t id = (data[0] << 8) | data[1];
+    return (id == 0x5449);
+}
+
+float INA260_ReadBusVoltage_V(void)
+{
+    uint8_t data[2] = {0};
+    if (!INA260_ReadReg(INA260_REG_BUSVOLT, data))
+        return -1.0f;   // sentinel = read failed
+
+    uint16_t raw = (data[0] << 8) | data[1];
+    return raw * 0.00125f;
+}

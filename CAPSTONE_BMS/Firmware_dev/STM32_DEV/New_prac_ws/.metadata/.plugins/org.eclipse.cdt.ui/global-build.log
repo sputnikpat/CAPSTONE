@@ -1,0 +1,125 @@
+20:42:45 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-size  Display_I2c.elf 
+   text	   data	    bss	    dec	    hex	filename
+  17664	    104	   3088	  20856	   5178	Display_I2c.elf
+Finished building: default.size.stdout
+ 
+20:42:50 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-size  Display_I2c.elf 
+   text	   data	    bss	    dec	    hex	filename
+  17664	    104	   3088	  20856	   5178	Display_I2c.elf
+Finished building: default.size.stdout
+ 
+22:21:06 **** Incremental Build of configuration Debug for project 001hello_world ****
+make -j12 all 
+arm-none-eabi-size  001hello_world.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5116	     92	   1900	   7108	   1bc4	001hello_world.elf
+Finished building: default.size.stdout
+ 
+22:21:06 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/ina260.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/ina260.d" -MT"Core/Src/ina260.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ina260.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/oled.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/oled.d" -MT"Core/Src/oled.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/oled.o"
+arm-none-eabi-gcc "../Core/Src/stm32f4xx_hal_msp.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/stm32f4xx_hal_msp.d" -MT"Core/Src/stm32f4xx_hal_msp.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stm32f4xx_hal_msp.o"
+arm-none-eabi-gcc "../Core/Src/stm32f4xx_it.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/stm32f4xx_it.d" -MT"Core/Src/stm32f4xx_it.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stm32f4xx_it.o"
+arm-none-eabi-gcc "../Core/Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/syscalls.d" -MT"Core/Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/syscalls.o"
+arm-none-eabi-gcc "../Core/Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/sysmem.d" -MT"Core/Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/sysmem.o"
+arm-none-eabi-gcc "../Core/Src/system_stm32f4xx.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/system_stm32f4xx.d" -MT"Core/Src/system_stm32f4xx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/system_stm32f4xx.o"
+arm-none-eabi-gcc -o "Display_I2c.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Display_I2c.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Display_I2c.elf
+ 
+arm-none-eabi-size  Display_I2c.elf 
+arm-none-eabi-objdump -h -S Display_I2c.elf  > "Display_I2c.list"
+   text	   data	    bss	    dec	    hex	filename
+  19656	    104	   3088	  22848	   5940	Display_I2c.elf
+Finished building: default.size.stdout
+ 
+Finished building: Display_I2c.list
+ 
+22:24:16 **** Incremental Build of configuration Debug for project 001hello_world ****
+make -j12 all 
+arm-none-eabi-size  001hello_world.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5116	     92	   1900	   7108	   1bc4	001hello_world.elf
+Finished building: default.size.stdout
+ 
+22:24:16 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/ina260.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/ina260.d" -MT"Core/Src/ina260.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ina260.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/oled.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/oled.d" -MT"Core/Src/oled.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/oled.o"
+../Core/Src/ina260.c: In function 'INA260_ReadReg':
+../Core/Src/ina260.c:24:9: warning: implicit declaration of function 'OLED_I2C_Recover' [-Wimplicit-function-declaration]
+   24 |         OLED_I2C_Recover();   // bus stuck / NACK -> bit-bang SCL free, reinit I2C1
+      |         ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Display_I2c.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Display_I2c.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Display_I2c.elf
+ 
+arm-none-eabi-size  Display_I2c.elf 
+arm-none-eabi-objdump -h -S Display_I2c.elf  > "Display_I2c.list"
+   text	   data	    bss	    dec	    hex	filename
+  19724	    104	   3088	  22916	   5984	Display_I2c.elf
+Finished building: default.size.stdout
+ 
+Finished building: Display_I2c.list
+ 
+22:25:43 **** Incremental Build of configuration Debug for project 001hello_world ****
+make -j12 all 
+arm-none-eabi-size  001hello_world.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5116	     92	   1900	   7108	   1bc4	001hello_world.elf
+Finished building: default.size.stdout
+ 
+22:25:43 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/ina260.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/ina260.d" -MT"Core/Src/ina260.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ina260.o"
+arm-none-eabi-gcc -o "Display_I2c.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Display_I2c.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Display_I2c.elf
+ 
+arm-none-eabi-size  Display_I2c.elf 
+arm-none-eabi-objdump -h -S Display_I2c.elf  > "Display_I2c.list"
+   text	   data	    bss	    dec	    hex	filename
+  19724	    104	   3088	  22916	   5984	Display_I2c.elf
+Finished building: default.size.stdout
+ 
+Finished building: Display_I2c.list
+ 
+22:25:49 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-size  Display_I2c.elf 
+   text	   data	    bss	    dec	    hex	filename
+  19724	    104	   3088	  22916	   5984	Display_I2c.elf
+Finished building: default.size.stdout
+ 
+22:34:36 **** Incremental Build of configuration Debug for project 001hello_world ****
+make -j12 all 
+arm-none-eabi-size  001hello_world.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5116	     92	   1900	   7108	   1bc4	001hello_world.elf
+Finished building: default.size.stdout
+ 
+22:34:36 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Display_I2c.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Display_I2c.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Display_I2c.elf
+ 
+arm-none-eabi-size  Display_I2c.elf 
+arm-none-eabi-objdump -h -S Display_I2c.elf  > "Display_I2c.list"
+   text	   data	    bss	    dec	    hex	filename
+  19680	    100	   3084	  22864	   5950	Display_I2c.elf
+Finished building: default.size.stdout
+ 
+Finished building: Display_I2c.list
+ 
+22:34:40 **** Incremental Build of configuration Debug for project Display_I2c ****
+make -j12 all 
+arm-none-eabi-size  Display_I2c.elf 
+   text	   data	    bss	    dec	    hex	filename
+  19680	    100	   3084	  22864	   5950	Display_I2c.elf
+Finished building: default.size.stdout
+ 

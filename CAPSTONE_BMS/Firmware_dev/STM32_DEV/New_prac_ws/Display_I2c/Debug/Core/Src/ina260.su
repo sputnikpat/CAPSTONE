@@ -1,0 +1,3 @@
+../Core/Src/ina260.c:15:16:INA260_ReadReg	32	static
+../Core/Src/ina260.c:31:9:INA260_Init	16	static
+../Core/Src/ina260.c:41:7:INA260_ReadBusVoltage_V	16	static

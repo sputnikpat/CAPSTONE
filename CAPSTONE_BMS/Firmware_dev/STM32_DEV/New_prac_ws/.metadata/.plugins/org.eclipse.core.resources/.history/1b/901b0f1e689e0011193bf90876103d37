@@ -1,0 +1,361 @@
+/*
+ * oled.c
+ *
+ *  Created on: Aug 23, 2026
+ *      Author: harsh
+ */
+
+
+#include "oled.h"
+#include "main.h"
+
+extern I2C_HandleTypeDef hi2c1;
+
+/* OLED Frame Buffer */
+
+static uint8_t OLED_Buffer[1024];
+
+
+/* ========================================================= */
+/* FONT                                                       */
+/* ========================================================= */
+
+static const uint8_t Font5x7[][5] =
+{
+    {0x00, 0x00, 0x00, 0x00, 0x00}, // SPACE
+
+    {0x7E, 0x11, 0x11, 0x11, 0x7E}, // A
+    {0x7F, 0x49, 0x49, 0x49, 0x36}, // B
+    {0x3E, 0x41, 0x41, 0x41, 0x22}, // C
+    {0x7F, 0x41, 0x41, 0x22, 0x1C}, // D
+    {0x7F, 0x49, 0x49, 0x49, 0x41}, // E
+    {0x7F, 0x09, 0x09, 0x09, 0x01}, // F
+    {0x3E, 0x41, 0x49, 0x49, 0x7A}, // G
+    {0x7F, 0x08, 0x08, 0x08, 0x7F}, // H
+    {0x00, 0x41, 0x7F, 0x41, 0x00}, // I
+    {0x20, 0x40, 0x41, 0x3F, 0x01}, // J
+    {0x7F, 0x08, 0x14, 0x22, 0x41}, // K
+    {0x7F, 0x40, 0x40, 0x40, 0x40}, // L
+    {0x7F, 0x02, 0x0C, 0x02, 0x7F}, // M
+    {0x7F, 0x04, 0x08, 0x10, 0x7F}, // N
+    {0x3E, 0x41, 0x41, 0x41, 0x3E}, // O
+    {0x7F, 0x09, 0x09, 0x09, 0x06}, // P
+    {0x3E, 0x41, 0x51, 0x21, 0x5E}, // Q
+    {0x7F, 0x09, 0x19, 0x29, 0x46}, // R
+    {0x46, 0x49, 0x49, 0x49, 0x31}, // S
+    {0x01, 0x01, 0x7F, 0x01, 0x01}, // T
+    {0x3F, 0x40, 0x40, 0x40, 0x3F}, // U
+    {0x1F, 0x20, 0x40, 0x20, 0x1F}, // V
+    {0x3F, 0x40, 0x38, 0x40, 0x3F}, // W
+    {0x63, 0x14, 0x08, 0x14, 0x63}, // X
+    {0x07, 0x08, 0x70, 0x08, 0x07}, // Y
+    {0x61, 0x51, 0x49, 0x45, 0x43}  // Z
+};
+
+
+/* ========================================================= */
+/* LOW LEVEL OLED FUNCTIONS                                   */
+/* ========================================================= */
+
+void OLED_WriteCommand(uint8_t command)
+{
+    uint8_t data[2];
+
+    data[0] = 0x00;
+    data[1] = command;
+
+    HAL_I2C_Master_Transmit(&hi2c1,
+                            OLED_ADDRESS << 1,
+                            data,
+                            2,
+                            HAL_MAX_DELAY);
+}
+
+
+void OLED_WriteData(uint8_t data)
+{
+    uint8_t buffer[2];
+
+    buffer[0] = 0x40;
+    buffer[1] = data;
+
+    HAL_I2C_Master_Transmit(&hi2c1,
+                            OLED_ADDRESS << 1,
+                            buffer,
+                            2,
+                            HAL_MAX_DELAY);
+}
+}
+
+/* ========================================================= */
+/* OLED INITIALIZATION                                         */
+/* ========================================================= */
+
+void OLED_Init(void)
+{
+    HAL_Delay(100);
+
+    OLED_WriteCommand(0xAE);
+
+    OLED_WriteCommand(0xD5);
+    OLED_WriteCommand(0x80);
+
+    OLED_WriteCommand(0xA8);
+    OLED_WriteCommand(0x3F);
+
+    OLED_WriteCommand(0xD3);
+    OLED_WriteCommand(0x00);
+
+    OLED_WriteCommand(0x40);
+
+    OLED_WriteCommand(0x8D);
+    OLED_WriteCommand(0x14);
+
+    OLED_WriteCommand(0x20);
+    OLED_WriteCommand(0x00);
+
+    OLED_WriteCommand(0xA1);
+
+    OLED_WriteCommand(0xC8);
+
+    OLED_WriteCommand(0xDA);
+    OLED_WriteCommand(0x12);
+
+    OLED_WriteCommand(0x81);
+    OLED_WriteCommand(0x7F);
+
+    OLED_WriteCommand(0xD9);
+    OLED_WriteCommand(0xF1);
+
+    OLED_WriteCommand(0xDB);
+    OLED_WriteCommand(0x40);
+
+    OLED_WriteCommand(0xA4);
+
+    OLED_WriteCommand(0xA6);
+
+    OLED_WriteCommand(0xAF);
+
+    HAL_Delay(100);
+}
+
+
+/* ========================================================= */
+/* FRAME BUFFER                                                */
+/* ========================================================= */
+
+void OLED_Clear(void)
+{
+    for (uint16_t i = 0; i < 1024; i++)
+    {
+        OLED_Buffer[i] = 0x00;
+    }
+}
+
+
+void OLED_Fill(uint8_t pattern)
+{
+    for (uint16_t i = 0; i < 1024; i++)
+    {
+        OLED_Buffer[i] = pattern;
+    }
+}
+
+
+void OLED_Update(void)
+{
+    for (uint8_t page = 0; page < 8; page++)
+    {
+        OLED_WriteCommand(0xB0 + page);
+
+        OLED_WriteCommand(0x02);
+
+        OLED_WriteCommand(0x10);
+
+        for (uint8_t column = 0;
+             column < 128;
+             column++)
+        {
+            OLED_WriteData(
+                OLED_Buffer[page * 128 + column]
+            );
+        }
+    }
+}
+
+
+/* ========================================================= */
+/* DRAW PIXEL                                                  */
+/* ========================================================= */
+
+void OLED_DrawPixel(uint8_t x,
+                    uint8_t y,
+                    uint8_t color)
+{
+    if (x >= OLED_WIDTH || y >= OLED_HEIGHT)
+    {
+        return;
+    }
+
+    uint16_t index;
+
+    index = x + (y / 8) * OLED_WIDTH;
+
+    uint8_t bit;
+
+    bit = y % 8;
+
+    if (color)
+    {
+        OLED_Buffer[index] |= (1 << bit);
+    }
+    else
+    {
+        OLED_Buffer[index] &= ~(1 << bit);
+    }
+}
+
+
+/* ========================================================= */
+/* DRAW CHARACTER                                              */
+/* ========================================================= */
+
+void OLED_DrawChar(uint8_t x,
+                   uint8_t y,
+                   char c)
+{
+    if (c == ' ')
+    {
+        return;
+    }
+
+    if (c < 'A' || c > 'Z')
+    {
+        return;
+    }
+
+    uint8_t index;
+
+    index = c - 'A';
+
+    for (uint8_t column = 0;
+         column < 5;
+         column++)
+    {
+        uint8_t column_data;
+
+        column_data =
+            Font5x7[index][column];
+
+        for (uint8_t row = 0;
+             row < 7;
+             row++)
+        {
+            if (column_data & (1 << row))
+            {
+                OLED_DrawPixel(
+                    x + column,
+                    y + row,
+                    1
+                );
+            }
+        }
+    }
+}
+
+
+/* ========================================================= */
+/* DRAW STRING                                                 */
+/* ========================================================= */
+
+void OLED_DrawString(uint8_t x,
+                     uint8_t y,
+                     const char *str)
+{
+    while (*str)
+    {
+        OLED_DrawChar(x, y, *str);
+
+        x += 6;
+
+        str++;
+
+        if (x >= 123)
+        {
+            break;
+        }
+    }
+}
+
+
+/* ========================================================= */
+/* BOOT SCREEN                                                 */
+/* ========================================================= */
+
+void OLED_BootScreen(void)
+{
+    OLED_Clear();
+
+    OLED_DrawString(46, 8, "AUV-01");
+
+    OLED_DrawString(34, 25, "SYSTEM");
+
+    OLED_DrawString(43, 35, "START");
+
+    OLED_Update();
+
+    HAL_Delay(700);
+
+
+    OLED_Clear();
+
+    OLED_DrawString(46, 8, "AUV-01");
+
+    OLED_DrawString(28, 25, "INITIALIZING");
+
+    OLED_Update();
+
+    HAL_Delay(500);
+
+
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        OLED_Clear();
+
+        OLED_DrawString(46, 8, "AUV-01");
+
+        OLED_DrawString(28, 25, "INITIALIZING");
+
+
+        for (uint8_t x = 0;
+             x < (i + 1) * 20;
+             x++)
+        {
+            for (uint8_t y = 45;
+                 y < 50;
+                 y++)
+            {
+                OLED_DrawPixel(
+                    14 + x,
+                    y,
+                    1
+                );
+            }
+        }
+
+        OLED_Update();
+
+        HAL_Delay(200);
+    }
+
+
+    OLED_Clear();
+
+    OLED_DrawString(34, 25, "SYSTEM");
+
+    OLED_DrawString(40, 35, "READY");
+
+    OLED_Update();
+
+    HAL_Delay(500);
+}

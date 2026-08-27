@@ -1,0 +1,121 @@
+2026-08-23 00:08:06,037 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:08:06,040 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:08:06,040 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:08:06,041 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:10:03,858 [INFO] Gpio:278 - dependency for GPIO [I2C1, RCC, SYS, USART2]
+2026-08-23 00:11:00,833 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,833 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,833 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,833 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,854 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,854 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,873 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,873 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:00,886 [INFO] Gpio:278 - dependency for GPIO [I2C1, RCC, SYS, USART2]
+2026-08-23 00:11:10,892 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,892 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,892 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,892 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,912 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,912 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,930 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,930 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:11:10,943 [INFO] Gpio:278 - dependency for GPIO [I2C1, RCC, SYS, USART2]
+2026-08-23 00:11:10,970 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2026-08-23 00:23:44,575 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,576 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,576 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,576 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,596 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,596 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,613 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,613 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:44,627 [INFO] Gpio:278 - dependency for GPIO [I2C1, RCC, SYS, USART2]
+2026-08-23 00:23:49,048 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,048 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,048 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,048 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,079 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,080 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,098 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,098 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:23:49,111 [INFO] Gpio:278 - dependency for GPIO [I2C1, RCC, SYS, USART2]
+2026-08-23 00:23:49,149 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2026-08-23 00:24:23,925 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 449883544 Bytes (683671552)
+2026-08-23 00:24:25,755 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 478721432 Bytes (683671552)
+2026-08-23 00:24:27,739 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 533771664 Bytes (683671552)
+2026-08-23 00:24:27,987 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2026-08-23 00:24:27,988 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2026-08-23 00:24:27,988 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2026-08-23 00:24:27,988 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2026-08-23 00:24:27,988 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2026-08-23 00:24:27,988 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2026-08-23 00:24:27,988 [INFO] CodeGenerator:892 - code generatio: config db path: /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.common.mx_6.15.0.202507011659//db/
+2026-08-23 00:24:27,989 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 00:24:27,989 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 00:24:28,047 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/license.tmp_save
+2026-08-23 00:24:28,209 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/license.tmp
+2026-08-23 00:24:28,222 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/gpio.tmp_save
+2026-08-23 00:24:28,290 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/gpio.tmp
+2026-08-23 00:24:28,341 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_it.c_save
+2026-08-23 00:24:28,487 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_it.c
+2026-08-23 00:24:28,488 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_it.h_save
+2026-08-23 00:24:28,539 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_it.h
+2026-08-23 00:24:28,542 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_hal_msp.c_save
+2026-08-23 00:24:28,625 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_hal_msp.c
+2026-08-23 00:24:28,626 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/system.tmp_save
+2026-08-23 00:24:28,678 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/system.tmp
+2026-08-23 00:24:28,688 [INFO] CodeEngine:321 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_hal_conf.h_save
+2026-08-23 00:24:28,749 [INFO] CodeEngine:345 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_hal_conf.h
+2026-08-23 00:24:28,771 [WARN] IPConfigManager:3238 - Warning: the RefConfig PLL2P_FOR_MCO is not available in your config.xml file
+2026-08-23 00:24:28,774 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/main.h_save
+2026-08-23 00:24:28,846 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/main.h
+2026-08-23 00:24:28,847 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/main.c_save
+2026-08-23 00:24:28,927 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/main.c
+2026-08-23 00:24:29,026 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 10mS.
+2026-08-23 00:24:29,027 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2026-08-23 00:24:29,072 [INFO] ConfigFileManager:1595 - The Die is : DIE421
+2026-08-23 00:24:29,713 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 686mS.
+2026-08-23 00:24:29,713 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2026-08-23 00:24:29,714 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2026-08-23 00:31:13,040 [INFO] WebApp:194 - Connection lost
+2026-08-23 00:31:13,190 [INFO] WebApp:191 - Connection restablished
+2026-08-23 00:31:15,795 [INFO] WebApp:194 - Connection lost
+2026-08-23 00:31:15,935 [INFO] WebApp:191 - Connection restablished
+2026-08-23 01:16:37,111 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 590702208 Bytes (683671552)
+2026-08-23 01:16:38,690 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 619536000 Bytes (683671552)
+2026-08-23 01:16:41,150 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 340736040 Bytes (683671552)
+2026-08-23 01:16:41,599 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2026-08-23 01:16:41,599 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2026-08-23 01:16:41,599 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2026-08-23 01:16:41,599 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2026-08-23 01:16:41,599 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2026-08-23 01:16:41,600 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2026-08-23 01:16:41,600 [INFO] CodeGenerator:892 - code generatio: config db path: /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.common.mx_6.15.0.202507011659//db/
+2026-08-23 01:16:41,602 [WARN] IP:2250 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2026-08-23 01:16:41,602 [WARN] IP:2250 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2026-08-23 01:16:41,692 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/license.tmp_save
+2026-08-23 01:16:41,827 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/license.tmp
+2026-08-23 01:16:41,849 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/gpio.tmp_save
+2026-08-23 01:16:41,948 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/gpio.tmp
+2026-08-23 01:16:42,025 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_it.c_save
+2026-08-23 01:16:42,212 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_it.c
+2026-08-23 01:16:42,213 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_it.h_save
+2026-08-23 01:16:42,267 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_it.h
+2026-08-23 01:16:42,270 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_hal_msp.c_save
+2026-08-23 01:16:42,356 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/stm32f4xx_hal_msp.c
+2026-08-23 01:16:42,357 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/system.tmp_save
+2026-08-23 01:16:42,418 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/MXTmpFiles/system.tmp
+2026-08-23 01:16:42,423 [INFO] CodeEngine:321 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_hal_conf.h_save
+2026-08-23 01:16:42,500 [INFO] CodeEngine:345 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/stm32f4xx_hal_conf.h
+2026-08-23 01:16:42,525 [WARN] IPConfigManager:3238 - Warning: the RefConfig PLL2P_FOR_MCO is not available in your config.xml file
+2026-08-23 01:16:42,529 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/main.h_save
+2026-08-23 01:16:42,611 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Inc/main.h
+2026-08-23 01:16:42,612 [INFO] CodeEngine:265 - oldGeneratedFile, /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/main.c_save
+2026-08-23 01:16:42,704 [INFO] CodeEngine:289 - Generated code: /home/harsh/STM32CubeIDE/New_prac_ws/Display_I2c/Core/Src/main.c
+2026-08-23 01:16:42,805 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 11mS.
+2026-08-23 01:16:42,806 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2026-08-23 01:16:42,853 [INFO] ConfigFileManager:1595 - The Die is : DIE421
+2026-08-23 01:16:43,355 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 549mS.
+2026-08-23 01:16:43,356 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2026-08-23 01:16:43,356 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
