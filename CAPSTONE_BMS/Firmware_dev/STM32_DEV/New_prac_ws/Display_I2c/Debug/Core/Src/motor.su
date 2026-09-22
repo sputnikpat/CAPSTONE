@@ -1,0 +1,4 @@
+../Core/Src/motor.c:26:6:Motor_GPIO_Init	40	static
+../Core/Src/motor.c:70:6:Motor_Forward	8	static
+../Core/Src/motor.c:84:6:Motor_Stop	8	static
+../Core/Src/motor.c:97:6:Motor_Brake	8	static

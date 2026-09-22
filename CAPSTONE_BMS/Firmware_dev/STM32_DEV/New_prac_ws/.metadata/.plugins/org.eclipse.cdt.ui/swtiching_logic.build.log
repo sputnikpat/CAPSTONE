@@ -1,0 +1,10 @@
+02:48:01 **** Incremental Build of configuration Debug for project swtiching_logic ****
+make -j12 all 
+arm-none-eabi-size  swtiching_logic.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12004	     92	   1972	  14068	   36f4	swtiching_logic.elf
+Finished building: default.size.stdout
+ 
+
+02:48:01 Build Finished. 0 errors, 0 warnings. (took 68ms)
+

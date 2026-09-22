@@ -392,7 +392,7 @@ void OLED_BootScreen(void)
 {
     OLED_Clear();
 
-    OLED_DrawString(46, 8, "AUV-01");
+    OLED_DrawString(46, 8, "ROVER");
 
     OLED_DrawString(34, 25, "SYSTEM");
 
@@ -405,7 +405,7 @@ void OLED_BootScreen(void)
 
     OLED_Clear();
 
-    OLED_DrawString(46, 8, "AUV-01");
+    OLED_DrawString(46, 8, "ROVER");
 
     OLED_DrawString(28, 25, "INITIALIZING");
 
@@ -418,7 +418,7 @@ void OLED_BootScreen(void)
     {
         OLED_Clear();
 
-        OLED_DrawString(46, 8, "AUV-01");
+        OLED_DrawString(46, 8, "ROVER");
 
         OLED_DrawString(28, 25, "INITIALIZING");
 

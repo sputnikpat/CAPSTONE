@@ -1,0 +1,4 @@
+../Core/Src/motor.c:26:6:Motor_GPIO_Init	1
+../Core/Src/motor.c:70:6:Motor_Forward	1
+../Core/Src/motor.c:84:6:Motor_Stop	1
+../Core/Src/motor.c:97:6:Motor_Brake	1

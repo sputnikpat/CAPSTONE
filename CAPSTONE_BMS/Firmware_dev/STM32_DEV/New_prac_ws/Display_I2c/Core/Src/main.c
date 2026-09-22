@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "ina260.h"
 #include "oled.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,9 +47,17 @@ I2C_HandleTypeDef hi2c1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-uint8_t screen = 0;
-uint8_t current_screen = 0;
+/*
+ * motor_running:
+ *   0 = motors stopped (default at power-up)
+ *   1 = motors running forward
+ *
+ * PC13 user button toggles this flag via EXTI callback.
+ * Press once = start forward. Press again = stop.
+ */
+volatile uint8_t motor_running = 0;
 /* USER CODE END PV */
+
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -57,25 +66,8 @@ static void MX_USART2_UART_Init(void);
 void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
-void OLED_WriteCommand(uint8_t command);
-void OLED_WriteData(uint8_t data);
-void OLED_Init(void);
-void OLED_Fill(uint8_t pattern);
+void OLED_ShowReadings(float voltage, float current_ma);
 
-void OLED_Clear(void);
-void OLED_Update(void);
-void OLED_DrawPixel(uint8_t x, uint8_t y, uint8_t color);
-void OLED_DrawChar(uint8_t x, uint8_t y, char c);
-void OLED_DrawString(uint8_t x, uint8_t y, const char *str);
-
-//AUV Dashboard
-void OLED_BootScreen(void);
-void OLED_Dashboard(void);
-void OLED_DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
-void OLED_DrawBattery(uint8_t x, uint8_t y, uint8_t percent);
-void OLED_StatusScreen(void);
-void OLED_NavigationScreen(void);
-void OLED_SonarScreen(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -117,6 +109,11 @@ int main(void)
   INA260_Init();
   /* USER CODE BEGIN 2 */
 
+
+  /* Motor GPIO — all LOW (stopped) at init */
+  Motor_GPIO_Init();
+
+
   OLED_Init();
 
   HAL_Delay(200);
@@ -129,26 +126,31 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      OLED_Clear();
+      /* ---- Read sensors ---- */
+      float vbus       = INA260_ReadBusVoltage_V();
+      float current_ma = INA260_ReadCurrent_mA();
 
-      if (screen == 0)
+      /* ---- Update display ---- */
+      OLED_ShowReadings(vbus, current_ma);
+
+      /* ---- Motor control via button toggle ---- */
+      if (motor_running)
       {
-          OLED_Dashboard();
+          Motor_Forward();
       }
-      else if (screen == 1)
+      else
       {
-          OLED_NavigationScreen();
-      }
-      else if (screen == 2)
-      {
-          OLED_SonarScreen();
+          Motor_Stop();
       }
 
-      OLED_Update();
+      /* ---- Heartbeat LED ---- */
+      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
-      HAL_Delay(100);
+      HAL_Delay(200);
   }
+  /* USER CODE END WHILE */
 }
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -308,229 +310,109 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-void OLED_Dashboard(void)
+/**
+ * @brief  Display voltage and current on OLED.
+ *         Layout (128x64 SSD1306):
+ *
+ *         Line 1 (y=2):   "ROVER BMS"          (title)
+ *         Line 2 (y=11):  ──────────────────    (separator)
+ *         Line 3 (y=18):  "V: 12.34 V"         (bus voltage)
+ *         Line 4 (y=32):  "I: 1234 MA"         (current in mA)
+ *         Line 5 (y=46):  "MTR: ON" or "MTR: OFF"
+ *
+ *         Font is uppercase only (A-Z, 0-9, - : . %)
+ */
+void OLED_ShowReadings(float voltage, float current_ma)
 {
-    char depth_text[32];
-    char volt_text[32];
+    char volt_text[22];
+    char curr_text[22];
+    char mtr_text[22];
 
-    static int depth = 124;
-    static int battery = 87;
-
-    snprintf(depth_text, sizeof(depth_text),
-             "DEPTH: %d.%dM", depth / 10, depth % 10);
-
-    float vbus = INA260_ReadBusVoltage_V();
-    if (vbus < 0)
-        snprintf(volt_text, sizeof(volt_text), "VOLT: ERR");
+    /* ---- Format voltage string ---- */
+    if (voltage < 0.0f)
+    {
+        /* INA260 read failed */
+        snprintf(volt_text, sizeof(volt_text), "V: ERR");
+    }
     else
-        snprintf(volt_text, sizeof(volt_text), "VOLT: %d.%02dV",
-                 (int)vbus, (int)((vbus - (int)vbus) * 100));
+    {
+        /*
+         * Integer formatting to avoid pulling in float printf.
+         * Example: 12.34V -> whole=12, frac=34
+         */
+        int v_whole = (int)voltage;
+        int v_frac  = (int)((voltage - v_whole) * 100);
+        if (v_frac < 0) v_frac = -v_frac;   /* guard against negative fraction */
+        snprintf(volt_text, sizeof(volt_text), "V: %d.%02d V", v_whole, v_frac);
+    }
 
-    /* Clear screen FIRST, then draw everything */
+    /* ---- Format current string ---- */
+    if (current_ma < -9000.0f)
+    {
+        /* INA260 read failed (sentinel is -9999) */
+        snprintf(curr_text, sizeof(curr_text), "I: ERR");
+    }
+    else
+    {
+        /*
+         * Display current as integer mA — sufficient for rover demo.
+         * Negative values = reverse current direction.
+         */
+        int i_whole = (int)current_ma;
+        snprintf(curr_text, sizeof(curr_text), "I: %d MA", i_whole);
+    }
+
+    /* ---- Motor status string ---- */
+    if (motor_running)
+    {
+        snprintf(mtr_text, sizeof(mtr_text), "MTR: ON");
+    }
+    else
+    {
+        snprintf(mtr_text, sizeof(mtr_text), "MTR: OFF");
+    }
+
+    /* ---- Draw everything ---- */
     OLED_Clear();
 
-    OLED_DrawString(4, 2, "AUV-01");
-    OLED_DrawString(82, 2, "ONLINE");
+    OLED_DrawString(34, 2, "ROVER BMS");
 
+    /* Horizontal separator line */
     for (uint8_t x = 0; x < 128; x++)
         OLED_DrawPixel(x, 11, 1);
 
-    OLED_DrawString(5, 17, depth_text);
-    OLED_DrawString(5, 30, volt_text);   // <-- replaces temp_text line
-
-    OLED_DrawString(5, 43, "BAT:");
-    OLED_DrawBattery(35, 41, battery);
-
-    char bat_text[10];
-    snprintf(bat_text, sizeof(bat_text), "%d%%", battery);
-    OLED_DrawString(72, 43, bat_text);
-
-    OLED_Update();
-
-    depth++;
-    if (depth > 150) depth = 124;
-
-    battery--;
-    if (battery < 80) battery = 87;
-}
-void OLED_DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
-{
-    for (uint8_t i = x; i < x + width; i++)
-    {
-        OLED_DrawPixel(i, y, 1);
-        OLED_DrawPixel(i, y + height - 1, 1);
-    }
-
-    for (uint8_t i = y; i < y + height; i++)
-    {
-        OLED_DrawPixel(x, i, 1);
-        OLED_DrawPixel(x + width - 1, i, 1);
-    }
-}
-
-void OLED_DrawBattery(uint8_t x, uint8_t y, uint8_t percent)
-{
-    /* Battery outline */
-
-    OLED_DrawRect(x, y, 30, 12);
-
-    /* Battery terminal */
-
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        OLED_DrawPixel(x + 30, y + 4 + i, 1);
-    }
-
-    /* Limit percentage */
-
-    if (percent > 100)
-    {
-        percent = 100;
-    }
-
-    /* Calculate fill width */
-
-    uint8_t fill = (percent * 26) / 100;
-
-    /* Fill battery */
-
-    for (uint8_t px = 0; px < fill; px++)
-    {
-        for (uint8_t py = 0; py < 8; py++)
-        {
-            OLED_DrawPixel(x + 2 + px, y + 2 + py, 1);
-        }
-    }
-}
-
-void OLED_StatusScreen(void)
-{
-    OLED_Clear();
-
-    OLED_DrawString(42, 2, "AUV-01");
-
-    for (uint8_t x = 0; x < 128; x++)
-    {
-        OLED_DrawPixel(x, 11, 1);
-    }
-
-    OLED_DrawString(5, 17, "STATUS: ONLINE");
-    OLED_DrawString(5, 30, "DEPTH: 12.4M");
-    OLED_DrawString(5, 43, "TEMP: 24.6C");
-    OLED_DrawString(5, 56, "BAT: 87%");
+    OLED_DrawString(5, 18, volt_text);
+    OLED_DrawString(5, 32, curr_text);
+    OLED_DrawString(5, 46, mtr_text);
 
     OLED_Update();
 }
 
-void OLED_NavigationScreen(void)
-{
-    OLED_Clear();
-
-    OLED_DrawString(35, 2, "NAVIGATION");
-
-    for (uint8_t x = 0; x < 128; x++)
-    {
-        OLED_DrawPixel(x, 11, 1);
-    }
-
-    /* Center point */
-
-    OLED_DrawPixel(64, 35, 1);
-
-    /* Up */
-
-    for (uint8_t y = 20; y < 35; y++)
-    {
-        OLED_DrawPixel(64, y, 1);
-    }
-
-    /* Down */
-
-    for (uint8_t y = 36; y < 51; y++)
-    {
-        OLED_DrawPixel(64, y, 1);
-    }
-
-    /* Left */
-
-    for (uint8_t x = 48; x < 64; x++)
-    {
-        OLED_DrawPixel(x, 35, 1);
-    }
-
-    /* Right */
-
-    for (uint8_t x = 65; x < 81; x++)
-    {
-        OLED_DrawPixel(x, 35, 1);
-    }
-
-    /* Direction arrows */
-
-    OLED_DrawPixel(64, 20, 1);
-    OLED_DrawPixel(63, 21, 1);
-    OLED_DrawPixel(65, 21, 1);
-
-    OLED_DrawString(10, 55, "HDG: 090");
-
-    OLED_Update();
-}
-
-void OLED_SonarScreen(void)
-{
-    OLED_Clear();
-
-    OLED_DrawString(48, 2, "SONAR");
-
-    for (uint8_t x = 0; x < 128; x++)
-    {
-        OLED_DrawPixel(x, 11, 1);
-    }
-
-    /* Horizontal sonar line */
-
-    for (uint8_t x = 20; x < 108; x++)
-    {
-        OLED_DrawPixel(x, 40, 1);
-    }
-
-    /* Vertical line */
-
-    for (uint8_t y = 18; y < 55; y++)
-    {
-        OLED_DrawPixel(64, y, 1);
-    }
-
-    /* Center */
-
-    OLED_DrawPixel(64, 40, 1);
-
-    /* Fake sonar targets */
-
-    OLED_DrawPixel(85, 30, 1);
-    OLED_DrawPixel(86, 30, 1);
-
-    OLED_DrawPixel(40, 25, 1);
-    OLED_DrawPixel(40, 26, 1);
-
-    OLED_DrawString(5, 55, "TARGETS: 02");
-
-    OLED_Update();
-}
-
+/**
+ * @brief  EXTI callback — PC13 user button toggles motor_running flag.
+ *
+ *         Simple software debounce: ignore presses within 300ms of last.
+ *         This is adequate for a demo; for production use a hardware
+ *         debounce RC + Schmitt or a timer-based debounce.
+ */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == GPIO_PIN_13)
     {
-        screen++;
+        /* Software debounce — 300ms lockout */
+        static uint32_t last_press = 0;
+        uint32_t now = HAL_GetTick();
 
-        if (screen > 2)
+        if ((now - last_press) > 300)
         {
-            screen = 0;
+            motor_running = !motor_running;
+            last_press = now;
         }
     }
 }
+
 /* USER CODE END 4 */
+
 
 /**
   * @brief  This function is executed in case of error occurrence.

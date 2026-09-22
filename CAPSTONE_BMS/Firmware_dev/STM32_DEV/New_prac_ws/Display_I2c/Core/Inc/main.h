@@ -57,20 +57,43 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define USART_TX_Pin GPIO_PIN_2
-#define USART_TX_GPIO_Port GPIOA
-#define USART_RX_Pin GPIO_PIN_3
-#define USART_RX_GPIO_Port GPIOA
-#define LD2_Pin GPIO_PIN_5
-#define LD2_GPIO_Port GPIOA
-#define TMS_Pin GPIO_PIN_13
-#define TMS_GPIO_Port GPIOA
-#define TCK_Pin GPIO_PIN_14
-#define TCK_GPIO_Port GPIOA
-#define SWO_Pin GPIO_PIN_3
-#define SWO_GPIO_Port GPIOB
+
+/* ---- Existing Nucleo defaults ---- */
+#define USART_TX_Pin        GPIO_PIN_2
+#define USART_TX_GPIO_Port  GPIOA
+#define USART_RX_Pin        GPIO_PIN_3
+#define USART_RX_GPIO_Port  GPIOA
+#define LD2_Pin             GPIO_PIN_5
+#define LD2_GPIO_Port       GPIOA
+#define TMS_Pin             GPIO_PIN_13
+#define TMS_GPIO_Port       GPIOA
+#define TCK_Pin             GPIO_PIN_14
+#define TCK_GPIO_Port       GPIOA
+#define SWO_Pin             GPIO_PIN_3
+#define SWO_GPIO_Port       GPIOB
 
 /* USER CODE BEGIN Private defines */
+
+/* ---- L298N Motor Driver pins ----
+ * PA9  (D8)  -> IN1  Motor A
+ * PA10 (D2)  -> IN2  Motor A
+ * PC7  (D9)  -> IN3  Motor B
+ * PB3  (D3)  -> IN4  Motor B
+ *
+ * NOTE: PB3 overlaps SWO_Pin define above.
+ *       SWO trace is unused in this project (debug via USART2).
+ *       CubeMX will reconfigure PB3 from SWO to GPIO_Output.
+ *       The SWO_Pin define above is CubeMX boilerplate — harmless
+ *       as long as we don't reference it in our code.
+ */
+#define MOTOR_A_IN1_Pin     GPIO_PIN_9
+#define MOTOR_A_IN1_Port    GPIOA
+#define MOTOR_A_IN2_Pin     GPIO_PIN_10
+#define MOTOR_A_IN2_Port    GPIOA
+#define MOTOR_B_IN3_Pin     GPIO_PIN_7
+#define MOTOR_B_IN3_Port    GPIOC
+#define MOTOR_B_IN4_Pin     GPIO_PIN_3
+#define MOTOR_B_IN4_Port    GPIOB
 
 /* USER CODE END Private defines */
 

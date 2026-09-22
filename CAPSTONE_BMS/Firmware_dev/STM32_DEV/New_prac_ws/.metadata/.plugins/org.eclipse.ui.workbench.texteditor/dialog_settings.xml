@@ -3,6 +3,7 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="UART debug"/>
 		<item value="void EXTI15_10_IRQHandler(void)"/>
 		<item value="volatile uint8_t screen = 0;"/>
 		<item value="volatile"/>

@@ -1,3 +1,4 @@
-../Core/Src/ina260.c:15:16:INA260_ReadReg	4
-../Core/Src/ina260.c:31:9:INA260_Init	2
-../Core/Src/ina260.c:41:7:INA260_ReadBusVoltage_V	2
+../Core/Src/ina260.c:29:16:INA260_ReadReg	4
+../Core/Src/ina260.c:49:9:INA260_Init	2
+../Core/Src/ina260.c:64:7:INA260_ReadBusVoltage_V	2
+../Core/Src/ina260.c:85:7:INA260_ReadCurrent_mA	2
