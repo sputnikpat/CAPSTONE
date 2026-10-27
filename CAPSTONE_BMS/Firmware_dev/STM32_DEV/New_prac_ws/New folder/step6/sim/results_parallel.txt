@@ -1,0 +1,46 @@
+[SIMULATED] build: RCF_PARALLEL_ENABLED=1 (SAFETY_VBUS_SEES_OPEN_STRING=1)
+
+=== P1 boot, dV 40 mV at rest -> start on higher (A), join after cooldown
+    I_A=0.92 A  I_B=0.60 A  topo_conf=1
+    -> PASS
+
+=== P2 DEMO: parallel + motors, inject OC on B -> B cut off, A keeps the load
+    B switch opened 60 ms after injection; open confirmed 120 ms after injection
+    after: I_A=1.52 A I_B=0.000 A  fault=A:-- B:OCD*
+    -> PASS
+
+=== P3 dV 150 mV at rest -> single A, never joins (10 s)
+    -> PASS
+
+=== P4 dV 250 mV, 0.8 A drive, discharge x200 -> load pulls A down, join when gated
+    joined=1 after 1500 ms, OCV_A=11.218 OCV_B=11.050, worst true join dV=68.7 mV
+    -> PASS
+
+=== P4b dV 120 mV, 2.0 A drive: terminal sag puts A BELOW B -> no join while driving; joins at rest
+    after stop: joined=1 OCV_A=11.037 OCV_B=11.050 true dV=15.8 mV
+    -> PASS
+
+=== P5a gate edge: dV 95 mV at rest -> join
+    -> PASS
+
+=== P5b gate edge: dV 105 mV at rest -> no join in 10 s
+    -> PASS
+
+=== P6 B pair failed OPEN: join, motors 2 A, B carries 0 -> dropped, never rejoins
+    -> PASS
+
+=== P8 foreign code turns B on while single A -> LOCKOUT
+    -> PASS
+
+=== P9 parallel, sensor B dies -> all off, LOCKOUT
+    -> PASS
+
+=== P10 parallel, A and B both trip -> LOCKOUT
+    -> PASS
+
+=== P11 single A (dV 350 mV, no join possible), motors on, A trips -> swap to B
+    -> PASS
+
+=== FUZZ 400 seeds x 30000 ms: PASS (no invariant violated)
+
+SCENARIO FAILURES: 0  (expects checked: 23)

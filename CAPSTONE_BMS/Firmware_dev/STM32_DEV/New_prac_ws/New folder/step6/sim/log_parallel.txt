@@ -1,0 +1,106 @@
+[SIMULATED] build: RCF_PARALLEL_ENABLED=1 (SAFETY_VBUS_SEES_OPEN_STRING=1)
+
+=== P1 boot, dV 40 mV at rest -> start on higher (A), join after cooldown
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    [plant] close B onto A: true dV = -37.5 mV, peak I ~ 0.15 A
+      1540 ms  # RCF: JOIN B onto A  dV=-43..-43 mV  I_A=19 mA
+      1560 ms  # RCF: JOIN VERIFIED  I_A=926 mA  I_B=597 mA
+    I_A=0.92 A  I_B=0.60 A  topo_conf=1
+    -> PASS
+
+=== P2 DEMO: parallel + motors, inject OC on B -> B cut off, A keeps the load
+      2600 ms  # RCF: SAFETY OPENED B while parallel -> A keeps the load
+      2660 ms  # RCF: ISOLATED B, open confirmed 60 ms after trip, I_A=1520 mA (pre-trip total 1520)
+    B switch opened 60 ms after injection; open confirmed 120 ms after injection
+    after: I_A=1.52 A I_B=0.000 A  fault=A:-- B:OCD*
+    -> PASS
+
+=== P3 dV 150 mV at rest -> single A, never joins (10 s)
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    -> PASS
+
+=== P4 dV 250 mV, 0.8 A drive, discharge x200 -> load pulls A down, join when gated
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    [plant] close B onto A: true dV = -68.7 mV, peak I ~ 0.28 A
+      2980 ms  # RCF: JOIN B onto A  dV=-91..-50 mV  I_A=825 mA
+    joined=1 after 1500 ms, OCV_A=11.218 OCV_B=11.050, worst true join dV=68.7 mV
+    -> PASS
+
+=== P4b dV 120 mV, 2.0 A drive: terminal sag puts A BELOW B -> no join while driving; joins at rest
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    [plant] close B onto A: true dV = +15.8 mV, peak I ~ 0.06 A
+     11600 ms  # RCF: JOIN B onto A  dV=14..14 mV  I_A=16 mA
+    after stop: joined=1 OCV_A=11.037 OCV_B=11.050 true dV=15.8 mV
+    -> PASS
+
+=== P5a gate edge: dV 95 mV at rest -> join
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    [plant] close B onto A: true dV = -92.5 mV, peak I ~ 0.38 A
+      1540 ms  # RCF: JOIN B onto A  dV=-98..-98 mV  I_A=19 mA
+    -> PASS
+
+=== P5b gate edge: dV 105 mV at rest -> no join in 10 s
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    -> PASS
+
+=== P6 B pair failed OPEN: join, motors 2 A, B carries 0 -> dropped, never rejoins
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    [plant] close B onto A: true dV = -17.5 mV, peak I ~ 0.07 A
+      1540 ms  # RCF: JOIN B onto A  dV=-23..-23 mV  I_A=19 mA
+      2060 ms  # RCF: B NOT CONDUCTING (I_tot=2021 mA) -> opened, run on A
+    -> PASS
+
+=== P8 foreign code turns B on while single A -> LOCKOUT
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+      3000 ms  # RCF LOCKOUT: switch closed by other code (RESET to clear)
+    -> PASS
+
+=== P9 parallel, sensor B dies -> all off, LOCKOUT
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    [plant] close B onto A: true dV = -37.5 mV, peak I ~ 0.15 A
+      1540 ms  # RCF: JOIN B onto A  dV=-43..-43 mV  I_A=19 mA
+      1560 ms  # RCF: JOIN VERIFIED  I_A=926 mA  I_B=597 mA
+      2060 ms  # RCF LOCKOUT: safety: no string may run (RESET to clear)
+    -> PASS
+
+=== P10 parallel, A and B both trip -> LOCKOUT
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+    [plant] close B onto A: true dV = -37.5 mV, peak I ~ 0.15 A
+      1540 ms  # RCF: JOIN B onto A  dV=-43..-43 mV  I_A=19 mA
+      1560 ms  # RCF: JOIN VERIFIED  I_A=926 mA  I_B=597 mA
+      2100 ms  # RCF LOCKOUT: safety: no string may run (RESET to clear)
+    -> PASS
+
+=== P11 single A (dV 350 mV, no join possible), motors on, A trips -> swap to B
+      1000 ms  # RCF: mode PARALLEL (VBUS string-side, T4 passed): start on higher string
+      1040 ms  # RCF: CONNECT A (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via A
+      3540 ms  # RCF: SAFETY OPENED A (only string, I was 1515 mA) -> swap
+      3600 ms  # RCF: A OPEN confirmed (current fell), load off, swap to B in >= 500 ms
+      4040 ms  # RCF: CONNECT B (swap)
+      4240 ms  # RCF: LOAD ON via B
+    -> PASS
+
+=== FUZZ 400 seeds x 30000 ms: PASS (no invariant violated)
+
+SCENARIO FAILURES: 0  (expects checked: 23)

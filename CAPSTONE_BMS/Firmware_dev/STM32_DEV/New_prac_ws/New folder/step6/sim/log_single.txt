@@ -1,0 +1,50 @@
+[SIMULATED] build: RCF_PARALLEL_ENABLED=0 (SAFETY_VBUS_SEES_OPEN_STRING=0)
+
+=== S1 single-only build: start on B, load after 200 ms hold, A never on
+      1000 ms  # RCF: mode SINGLE-ONLY (T4 not set): start on B, no paralleling
+      1040 ms  # RCF: CONNECT B (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via B
+    -> PASS
+
+=== S2 DEMO (single): driving on B, inject OC on B -> break-before-make swap to A
+      3300 ms  # RCF: SAFETY OPENED B (only string, I was 1525 mA) -> swap
+      3360 ms  # RCF: B OPEN confirmed (current fell), load off, swap to A in >= 500 ms
+      3800 ms  # RCF: CONNECT A (swap)
+      4000 ms  # RCF: LOAD ON via A
+    after injection: B off 60 ms, load off 120 ms, A on 560 ms, load on 760 ms
+    -> PASS
+
+=== S3 inject B with motors STOPPED -> cannot prove B open -> LOCKOUT, A never closed
+      1000 ms  # RCF: mode SINGLE-ONLY (T4 not set): start on B, no paralleling
+      1040 ms  # RCF: CONNECT B (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via B
+      1800 ms  # RCF: SAFETY OPENED B (only string, I was 24 mA) -> swap
+      1840 ms  # RCF LOCKOUT: cannot prove old string open (no load before trip) (RESET to clear)
+    -> PASS
+
+=== S4 B pair STUCK closed, inject B while driving -> LOCKOUT, A never closed
+      1000 ms  # RCF: mode SINGLE-ONLY (T4 not set): start on B, no paralleling
+      1040 ms  # RCF: CONNECT B (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via B
+      1800 ms  # RCF: SAFETY OPENED B (only string, I was 1524 mA) -> swap
+      1960 ms  # RCF LOCKOUT: safety: no string may run (RESET to clear)
+    safety: STUCK B
+    -> PASS
+
+=== S6 manual all-off (bench '0') -> LOCKOUT
+      1000 ms  # RCF: mode SINGLE-ONLY (T4 not set): start on B, no paralleling
+      1040 ms  # RCF: CONNECT B (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via B
+      1560 ms  # RCF LOCKOUT: string opened unexpectedly (manual 0?) (RESET to clear)
+    -> PASS
+
+=== S7 idle A faults, B keeps running; then B faults -> LOCKOUT
+      1000 ms  # RCF: mode SINGLE-ONLY (T4 not set): start on B, no paralleling
+      1040 ms  # RCF: CONNECT B (load off, 200 ms hold)
+      1240 ms  # RCF: LOAD ON via B
+      2100 ms  # RCF LOCKOUT: safety: no string may run (RESET to clear)
+    -> PASS
+
+=== FUZZ 400 seeds x 30000 ms: PASS (no invariant violated)
+
+SCENARIO FAILURES: 0  (expects checked: 12)

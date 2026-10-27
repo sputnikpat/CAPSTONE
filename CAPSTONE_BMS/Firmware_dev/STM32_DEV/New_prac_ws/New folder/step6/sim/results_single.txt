@@ -1,0 +1,25 @@
+[SIMULATED] build: RCF_PARALLEL_ENABLED=0 (SAFETY_VBUS_SEES_OPEN_STRING=0)
+
+=== S1 single-only build: start on B, load after 200 ms hold, A never on
+    -> PASS
+
+=== S2 DEMO (single): driving on B, inject OC on B -> break-before-make swap to A
+    after injection: B off 60 ms, load off 120 ms, A on 560 ms, load on 760 ms
+    -> PASS
+
+=== S3 inject B with motors STOPPED -> cannot prove B open -> LOCKOUT, A never closed
+    -> PASS
+
+=== S4 B pair STUCK closed, inject B while driving -> LOCKOUT, A never closed
+    safety: STUCK B
+    -> PASS
+
+=== S6 manual all-off (bench '0') -> LOCKOUT
+    -> PASS
+
+=== S7 idle A faults, B keeps running; then B faults -> LOCKOUT
+    -> PASS
+
+=== FUZZ 400 seeds x 30000 ms: PASS (no invariant violated)
+
+SCENARIO FAILURES: 0  (expects checked: 12)
